@@ -2,7 +2,33 @@
 
 #include "mos6502/cpu.h"
 #include "mos6502/cpuio.h"
+#include "mos6502/instructionset.h"
 #include "mos6502/u16.h"
+
+void Clock(struct CPU* cpu)
+{
+	switch (cpu->internal.cycles--)
+	{
+	case 1:
+	{
+		cpu->internal.address = cpu->programCounter;
+		cpu->internal.opcode = Read(cpu);
+		++cpu->programCounter;
+
+		break;
+	}
+	case 0:
+	{
+		const struct Instruction* instruction = &instructionSet[cpu->internal.opcode];
+		cpu->internal.cycles += instruction->cycles;
+
+		instruction->Address(cpu);
+		instruction->Operate(cpu);
+
+		break;
+	}
+	};
+}
 
 void Reset(struct CPU* cpu)
 {
