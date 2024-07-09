@@ -21,15 +21,19 @@ struct CPU
 	uint8_t yIndex;
 	uint8_t stackPointer;
 
-	struct Status
+	union
 	{
-		uint8_t carry : 1;
-		uint8_t zero : 1;
-		uint8_t irqDisable : 1;
-		uint8_t decimalMode : 1;
-		uint8_t brkCommand : 1;
-		uint8_t unused : 1;
-		uint8_t overflow : 1;
-		uint8_t negative : 1;
+		struct Status
+		{
+			uint8_t carry : 1;
+			uint8_t zero : 1;
+			uint8_t irqDisable : 1;
+			uint8_t decimalMode : 1;
+			uint8_t brkCommand : 1;
+			uint8_t unused : 1;
+			uint8_t overflow : 1;
+			uint8_t negative : 1;
+		};
+		uint8_t flags;
 	} status;
 };
