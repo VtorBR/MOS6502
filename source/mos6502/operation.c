@@ -23,6 +23,6 @@ void NOP(struct CPU* cpu)
 void RTI(struct CPU* cpu)
 {
 	cpu->status.flags = Pop(cpu);
-	*HI(&cpu->programCounter) = Pop(cpu);
 	*LO(&cpu->programCounter) = Pop(cpu);
+	*HI(&cpu->programCounter) = Pop(cpu);
 }
