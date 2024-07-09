@@ -2,18 +2,20 @@
 
 #include "mos6502/cpu.h"
 #include "mos6502/cpuio.h"
+#include "mos6502/u16.h"
 
 void Reset(struct CPU* cpu)
 {
+	cpu->accumulator = 0xAA;
+	cpu->xIndex = 0x00;
+	cpu->yIndex = 0x00;
+	cpu->stackPointer = 0xFD;
+	cpu->status.flags = 0b0010110;
+
 	cpu->internal.address = 0xFFFC;
+	*LO(&cpu->programCounter) = Read(cpu);
+	++cpu->internal.address;
+	*HI(&cpu->programCounter) = Read(cpu);
 
-	cpu->programCounter = ReadAddress(cpu);
-	cpu->accumulator = 0;
-	cpu->xIndex = 0;
-	cpu->yIndex = 0;
-	cpu->stackPointer = 0xFF;
-	*(uint8_t*)&cpu->status = 0b00100000;
-
-	cpu->internal.address = 0x0000;
 	cpu->internal.cycles = 8;
 }
