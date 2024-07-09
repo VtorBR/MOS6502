@@ -19,3 +19,45 @@ void Reset(struct CPU* cpu)
 
 	cpu->internal.cycles = 8;
 }
+
+void IRQ(struct CPU* cpu)
+{
+	if (cpu->status.irqDisable)
+	{
+		return;
+	}
+
+	cpu->status.brkCommand = 0;
+
+	Push(cpu, *HI(&cpu->programCounter));
+	Push(cpu, *LO(&cpu->programCounter));
+	Push(cpu, cpu->status.flags);
+
+	cpu->status.irqDisable = 1;
+
+	cpu->internal.address = 0xFFFE;
+	*LO(&cpu->programCounter) = Read(cpu);
+	++cpu->internal.address;
+	*HI(&cpu->programCounter) = Read(cpu);
+
+	cpu->internal.cycles = 7;
+}
+
+void NMI(struct CPU* cpu)
+{
+	Push(cpu, *HI(&cpu->programCounter));
+	Push(cpu, *LO(&cpu->programCounter));
+
+	cpu->status.brkCommand = 0;
+
+	Push(cpu, cpu->status.flags);
+
+	cpu->status.irqDisable = 1;
+
+	cpu->internal.address = 0xFFFA;
+	*LO(&cpu->programCounter) = Read(cpu);
+	++cpu->internal.address;
+	*HI(&cpu->programCounter) = Read(cpu);
+
+	cpu->internal.cycles = 7;
+}
