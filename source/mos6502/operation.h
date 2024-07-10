@@ -7,6 +7,7 @@ void CLC(struct CPU*);
 void CLD(struct CPU*);
 void CLI(struct CPU*);
 void CLV(struct CPU*);
+void CMP(struct CPU*);
 void DEX(struct CPU*);
 void DEY(struct CPU*);
 void INX(struct CPU*);

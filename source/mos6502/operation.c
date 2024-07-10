@@ -36,6 +36,16 @@ void CLV(struct CPU* cpu)
 	cpu->status.overflow = 0;
 }
 
+void CMP(struct CPU* cpu)
+{
+	const uint8_t input = Read(cpu);
+	const uint16_t value = (uint16_t)cpu->accumulator - (uint16_t)input;
+
+	cpu->status.negative = value & 0x80;
+	cpu->status.zero = value == 0x00;
+	cpu->status.carry = cpu->accumulator >= input;
+}
+
 void DEX(struct CPU* cpu)
 {
 	--cpu->xIndex;
