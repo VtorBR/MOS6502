@@ -4,4 +4,4 @@
 
 extern const char* instructionMnemonics[256];
 
-void Disassemble(uint8_t* program, char* buffer);
+void Disassemble(uint8_t* program, char buffer[13]);
