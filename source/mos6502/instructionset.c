@@ -7,6 +7,7 @@ struct Instruction const instructionSet[256] =
 {
 	[0x00] = {BRK, IMP, 7},
 	[0x08] = {PHP, IMP, 3},
+	[0x10] = {BPL, REL, 2},
 	[0x18] = {CLC, IMP, 2},
 	[0x28] = {PLP, IMP, 4},
 	[0x38] = {SEC, IMP, 2},

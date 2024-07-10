@@ -32,6 +32,20 @@ void BNE(struct CPU* cpu)
 	}
 }
 
+void BPL(struct CPU* cpu)
+{
+	if (cpu->status.negative == 0)
+	{
+		++cpu->internal.cycles;
+		if (*HI(&cpu->programCounter) != *HI(&cpu->internal.address))
+		{
+			++cpu->internal.cycles;
+		}
+
+		cpu->programCounter = cpu->internal.address;
+	}
+}
+
 void BRK(struct CPU* cpu)
 {
 	Push(cpu, *HI(&cpu->programCounter));

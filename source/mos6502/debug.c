@@ -20,6 +20,7 @@ void(*disassemblers[256])(uint8_t*, char*) =
 {
 	[0x00] = DisassembleIMP,
 	[0x08] = DisassembleIMP,
+	[0x10] = DisassembleREL,
 	[0x18] = DisassembleIMP,
 	[0x28] = DisassembleIMP,
 	[0x38] = DisassembleIMP,
@@ -70,6 +71,7 @@ const char* instructionMnemonics[256] =
 {
 	[0x00] = "BRK",
 	[0x08] = "PHP",
+	[0x10] = "BPL",
 	[0x18] = "CLC",
 	[0x28] = "PLP",
 	[0x38] = "SEC",
