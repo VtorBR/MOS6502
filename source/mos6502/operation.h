@@ -2,6 +2,8 @@
 
 struct CPU;
 
+void BEQ(struct CPU*);
+void BNE(struct CPU*);
 void BRK(struct CPU*);
 void CLC(struct CPU*);
 void CLD(struct CPU*);

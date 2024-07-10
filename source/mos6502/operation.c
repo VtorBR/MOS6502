@@ -4,6 +4,34 @@
 #include "mos6502/cpuio.h"
 #include "mos6502/u16.h"
 
+void BEQ(struct CPU* cpu)
+{
+	if (cpu->status.zero == 1)
+	{
+		++cpu->internal.cycles;
+		if (*HI(&cpu->programCounter) != *HI(&cpu->internal.address))
+		{
+			++cpu->internal.cycles;
+		}
+
+		cpu->programCounter = cpu->internal.address;
+	}
+}
+
+void BNE(struct CPU* cpu)
+{
+	if (cpu->status.zero == 0)
+	{
+		++cpu->internal.cycles;
+		if (*HI(&cpu->programCounter) != *HI(&cpu->internal.address))
+		{
+			++cpu->internal.cycles;
+		}
+
+		cpu->programCounter = cpu->internal.address;
+	}
+}
+
 void BRK(struct CPU* cpu)
 {
 	Push(cpu, *HI(&cpu->programCounter));
