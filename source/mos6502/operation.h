@@ -13,6 +13,7 @@ void CLV(struct CPU*);
 void CMP(struct CPU*);
 void DEX(struct CPU*);
 void DEY(struct CPU*);
+void EOR(struct CPU*);
 void INX(struct CPU*);
 void INY(struct CPU*);
 void JMP(struct CPU*);

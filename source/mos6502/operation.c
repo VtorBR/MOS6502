@@ -104,6 +104,14 @@ void DEY(struct CPU* cpu)
 	cpu->status.zero = cpu->yIndex == 0x00;
 }
 
+void EOR(struct CPU* cpu)
+{
+	cpu->accumulator ^= Read(cpu);
+
+	cpu->status.negative = cpu->accumulator & 0x80;
+	cpu->status.zero = cpu->accumulator == 0x00;
+}
+
 void INX(struct CPU* cpu)
 {
 	++cpu->xIndex;
