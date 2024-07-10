@@ -20,7 +20,7 @@ void Clock(struct CPU* cpu)
 	case 0:
 	{
 		const struct Instruction* instruction = &instructionSet[cpu->internal.opcode];
-		cpu->internal.cycles += instruction->cycles;
+		cpu->internal.cycles = instruction->cycles;
 
 		instruction->Address(cpu);
 		instruction->Operate(cpu);
