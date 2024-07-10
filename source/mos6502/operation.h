@@ -11,6 +11,7 @@ void DEX(struct CPU*);
 void DEY(struct CPU*);
 void INX(struct CPU*);
 void INY(struct CPU*);
+void JMP(struct CPU*);
 void LDA(struct CPU*);
 void LDX(struct CPU*);
 void LDY(struct CPU*);

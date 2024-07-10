@@ -68,6 +68,11 @@ void INY(struct CPU* cpu)
 	cpu->status.zero = cpu->yIndex == 0x00;
 }
 
+void JMP(struct CPU* cpu)
+{
+	cpu->programCounter = cpu->internal.address;
+}
+
 void LDA(struct CPU* cpu)
 {
 	cpu->accumulator = Read(cpu);
