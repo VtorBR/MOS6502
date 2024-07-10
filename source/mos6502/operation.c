@@ -153,6 +153,21 @@ void SEI(struct CPU* cpu)
 	cpu->status.irqDisable = 1;
 }
 
+void STA(struct CPU* cpu)
+{
+	Write(cpu, cpu->accumulator);
+}
+
+void STX(struct CPU* cpu)
+{
+	Write(cpu, cpu->xIndex);
+}
+
+void STY(struct CPU* cpu)
+{
+	Write(cpu, cpu->yIndex);
+}
+
 void TAX(struct CPU* cpu)
 {
 	cpu->xIndex = cpu->accumulator;
