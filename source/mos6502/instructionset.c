@@ -17,6 +17,7 @@ struct Instruction const instructionSet[256] =
 	[0x58] = {CLI, IMP, 2},
 	[0x60] = {RTS, IMP, 6},
 	[0x68] = {PLA, IMP, 4},
+	[0x6C] = {JMP, IDR, 5},
 	[0x78] = {SEI, IMP, 2},
 	[0x88] = {DEY, IMP, 2},
 	[0x8A] = {TXA, IMP, 2},
