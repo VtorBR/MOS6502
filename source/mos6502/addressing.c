@@ -144,7 +144,7 @@ void REL(struct CPU* cpu)
 {
 	cpu->internal.address = cpu->programCounter;
 	++cpu->programCounter;
-	uint16_t offset;
+	uint16_t offset = 0x0000;
 	
 	*LO(&offset) = Read(cpu);
 
