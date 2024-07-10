@@ -68,6 +68,30 @@ void INY(struct CPU* cpu)
 	cpu->status.zero = cpu->yIndex == 0x00;
 }
 
+void LDA(struct CPU* cpu)
+{
+	cpu->accumulator = Read(cpu);
+
+	cpu->status.negative = cpu->accumulator & 0x80;
+	cpu->status.zero = cpu->accumulator == 0x00;
+}
+
+void LDX(struct CPU* cpu)
+{
+	cpu->xIndex = Read(cpu);
+
+	cpu->status.negative = cpu->xIndex & 0x80;
+	cpu->status.zero = cpu->xIndex == 0x00;
+}
+
+void LDY(struct CPU* cpu)
+{
+	cpu->yIndex = Read(cpu);
+
+	cpu->status.negative = cpu->yIndex & 0x80;
+	cpu->status.zero = cpu->yIndex == 0x00;
+}
+
 void NOP(struct CPU* cpu)
 {
 
