@@ -113,6 +113,36 @@ void DisassembleABS(uint8_t* program, char* buffer)
 	sprintf(buffer, "%s $%02X%02X", instructionMnemonics[program[0]], program[1], program[2]);
 }
 
+void DisassembleABX(uint8_t* program, char* buffer)
+{
+	sprintf(buffer, "%s $%02X%02X,X", instructionMnemonics[program[0]], program[1], program[2]);
+}
+
+void DisassembleABY(uint8_t* program, char* buffer)
+{
+	sprintf(buffer, "%s $%02X%02X,Y", instructionMnemonics[program[0]], program[1], program[2]);
+}
+
+void DisassembleACC(uint8_t* program, char* buffer)
+{
+	sprintf(buffer, "%s A", instructionMnemonics[program[0]]);
+}
+
+void DisassembleIDR(uint8_t* program, char* buffer)
+{
+	sprintf(buffer, "%s ($%02X%02X)", instructionMnemonics[program[0]], program[1], program[2]);
+}
+
+void DisassembleIDX(uint8_t* program, char* buffer)
+{
+	sprintf(buffer, "%s ($%02X,X)", instructionMnemonics[program[0]], program[1]);
+}
+
+void DisassembleIDY(uint8_t* program, char* buffer)
+{
+	sprintf(buffer, "%s ($%02X),Y", instructionMnemonics[program[0]], program[1]);
+}
+
 void DisassembleIMM(uint8_t* program, char* buffer)
 {
 	sprintf(buffer, "%s #$%02X", instructionMnemonics[program[0]], program[1]);
@@ -126,4 +156,19 @@ void DisassembleIMP(uint8_t* program, char* buffer)
 void DisassembleREL(uint8_t* program, char* buffer)
 {
 	sprintf(buffer, "%s $%02X", instructionMnemonics[program[0]], program[1]);
+}
+
+void DisassembleZPG(uint8_t* program, char* buffer)
+{
+	sprintf(buffer, "%s $%02X", instructionMnemonics[program[0]], program[1]);
+}
+
+void DisassembleZPX(uint8_t* program, char* buffer)
+{
+	sprintf(buffer, "%s $%02X,X", instructionMnemonics[program[0]], program[1]);
+}
+
+void DisassembleZPY(uint8_t* program, char* buffer)
+{
+	sprintf(buffer, "%s $%02X,Y", instructionMnemonics[program[0]], program[1]);
 }
