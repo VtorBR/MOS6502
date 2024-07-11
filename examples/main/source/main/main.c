@@ -135,6 +135,10 @@ bool IsTrapped(struct CPU* cpu)
 		{
 			++count;
 		}
+		else if ((instruction[0] & 0x10) == 0x10 && (instruction[0] & 0x0F) == 0x00 && instruction[1] == 0xFE)
+		{
+			++count;
+		}
 		else
 		{
 			count = 0;
