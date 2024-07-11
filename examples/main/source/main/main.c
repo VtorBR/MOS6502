@@ -62,35 +62,56 @@ int main(int argc, char** argv)
 
 	unsigned int cycle = 0;
 	unsigned int instructionCount = 0;
-	uint8_t currentInstruction = 0;
 	while (!IsTrapped(&cpu))
 	{
-		const uint8_t oldCycles = cpu.internal.cycles;
-		const uint16_t currentInstruction = cpu.programCounter;
+		const struct CPU old = cpu;
 
 		Clock(&cpu);
 
 		const char colors[] = { '\xB0', '\xB2', '\xB1' };
-		if (oldCycles == 0)
+		if (old.internal.cycles == 0)
 		{
 			++instructionCount;
 			char buffer[13];
-			Disassemble(memory->raw + currentInstruction, buffer);
+			Disassemble(memory->raw + old.programCounter, buffer);
 			printf("% 5u% 2c\t%04X : %-12s",
 				cycle,
 				colors[instructionCount % 2],
-				currentInstruction,
+				old.programCounter,
 				buffer);
 		}
 		else if (cpu.internal.cycles == 0)
 		{
-			printf("% 3c\tS: 0x%02X\tP: 0x%02X\tA: 0x%02X\tX: 0x%02X\tY: 0x%02X\n",
-				colors[instructionCount % 2],
-				cpu.stackPointer,
-				cpu.status.flags,
-				cpu.accumulator,
-				cpu.xIndex,
+			printf("% 3c",
+				colors[instructionCount % 2]);
+
+			const char* formats[] =
+			{
+				[false] = "\t%c: 0x%02X",
+				[true] = "\t%c:",
+			};
+
+			printf(formats[old.stackPointer == cpu.stackPointer],
+				'S',
+				cpu.stackPointer);
+
+			printf(formats[old.status.flags == cpu.status.flags],
+				'P',
+				cpu.status.flags);
+
+			printf(formats[old.accumulator == cpu.accumulator],
+				'A',
+				cpu.accumulator);
+
+			printf(formats[old.xIndex == cpu.xIndex],
+				'X',
+				cpu.xIndex);
+
+			printf(formats[old.yIndex == cpu.yIndex],
+				'Y',
 				cpu.yIndex);
+
+			putchar('\n');
 		}
 
 		++cycle;
