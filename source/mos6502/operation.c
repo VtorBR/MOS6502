@@ -17,9 +17,51 @@ void ADC(struct CPU* cpu)
 	cpu->accumulator = value & 0x00FF;
 }
 
+void BCC(struct CPU* cpu)
+{
+	if (cpu->status.carry == 0)
+	{
+		++cpu->internal.cycles;
+		if (*HI(&cpu->programCounter) != *HI(&cpu->internal.address))
+		{
+			++cpu->internal.cycles;
+		}
+
+		cpu->programCounter = cpu->internal.address;
+	}
+}
+
+void BCS(struct CPU* cpu)
+{
+	if (cpu->status.carry == 1)
+	{
+		++cpu->internal.cycles;
+		if (*HI(&cpu->programCounter) != *HI(&cpu->internal.address))
+		{
+			++cpu->internal.cycles;
+		}
+
+		cpu->programCounter = cpu->internal.address;
+	}
+}
+
 void BEQ(struct CPU* cpu)
 {
 	if (cpu->status.zero == 1)
+	{
+		++cpu->internal.cycles;
+		if (*HI(&cpu->programCounter) != *HI(&cpu->internal.address))
+		{
+			++cpu->internal.cycles;
+		}
+
+		cpu->programCounter = cpu->internal.address;
+	}
+}
+
+void BMI(struct CPU* cpu)
+{
+	if (cpu->status.negative == 1)
 	{
 		++cpu->internal.cycles;
 		if (*HI(&cpu->programCounter) != *HI(&cpu->internal.address))
@@ -69,6 +111,34 @@ void BRK(struct CPU* cpu)
 	*LO(&cpu->programCounter) = Read(cpu);
 	++cpu->internal.address;
 	*HI(&cpu->programCounter) = Read(cpu);
+}
+
+void BVC(struct CPU* cpu)
+{
+	if (cpu->status.overflow == 0)
+	{
+		++cpu->internal.cycles;
+		if (*HI(&cpu->programCounter) != *HI(&cpu->internal.address))
+		{
+			++cpu->internal.cycles;
+		}
+
+		cpu->programCounter = cpu->internal.address;
+	}
+}
+
+void BVS(struct CPU* cpu)
+{
+	if (cpu->status.overflow == 1)
+	{
+		++cpu->internal.cycles;
+		if (*HI(&cpu->programCounter) != *HI(&cpu->internal.address))
+		{
+			++cpu->internal.cycles;
+		}
+
+		cpu->programCounter = cpu->internal.address;
+	}
 }
 
 void CLC(struct CPU* cpu)

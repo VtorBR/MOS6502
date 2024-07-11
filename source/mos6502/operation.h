@@ -3,10 +3,15 @@
 struct CPU;
 
 void ADC(struct CPU*);
+void BCC(struct CPU*);
+void BCS(struct CPU*);
 void BEQ(struct CPU*);
+void BMI(struct CPU*);
 void BNE(struct CPU*);
 void BPL(struct CPU*);
 void BRK(struct CPU*);
+void BVC(struct CPU*);
+void BVS(struct CPU*);
 void CLC(struct CPU*);
 void CLD(struct CPU*);
 void CLI(struct CPU*);
