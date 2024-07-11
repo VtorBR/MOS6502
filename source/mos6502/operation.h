@@ -2,6 +2,7 @@
 
 struct CPU;
 
+void ADC(struct CPU*);
 void BEQ(struct CPU*);
 void BNE(struct CPU*);
 void BPL(struct CPU*);

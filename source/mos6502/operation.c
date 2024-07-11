@@ -4,6 +4,19 @@
 #include "mos6502/cpuio.h"
 #include "mos6502/u16.h"
 
+void ADC(struct CPU* cpu)
+{
+	const uint8_t input = Read(cpu);
+	const uint16_t value = (uint16_t)cpu->accumulator + (uint16_t)input + cpu->status.carry;
+
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.overflow = (value ^ cpu->accumulator) & (value ^ input) & 0x0080;
+	cpu->status.zero = value == 0x00;
+	cpu->status.carry = (value & 0x0100) == 0x0100;
+
+	cpu->accumulator = value & 0x00FF;
+}
+
 void BEQ(struct CPU* cpu)
 {
 	if (cpu->status.zero == 1)
