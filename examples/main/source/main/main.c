@@ -2,14 +2,17 @@
 
 #include <mos6502/bus.h>
 #include <mos6502/cpu.h>
-#include <mos6502/interrupt.h>
 #include <mos6502/debug.h>
+#include <mos6502/interrupt.h>
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+bool IsTrapped(struct CPU*);
 
 int main(int argc, char** argv)
 {
@@ -39,7 +42,6 @@ int main(int argc, char** argv)
 		const size_t readSize = fread(memory->raw, 1, 64 * 1024, source);
 
 		cpu.programCounter = 0x0400;
-		cpu.internal.cycles = 1;
 
 		fclose(source);
 		source = NULL;
@@ -60,30 +62,35 @@ int main(int argc, char** argv)
 
 	unsigned int cycle = 0;
 	unsigned int instructionCount = 0;
-	const char colors[] = { '\xB0', '\xB2', '\xB1' };
-	while (cycle < 256)
+	uint8_t currentInstruction = 0;
+	while (!IsTrapped(&cpu))
 	{
-		if (cpu.internal.cycles == 1)
-		{
-			++instructionCount;
-			char buffer[12];
-			Disassemble(memory->raw + cpu.programCounter, buffer);
-			printf("% 4u %c\t%04X : %-11s", cycle, colors[instructionCount % 2], cpu.programCounter, buffer);
-		}
-
 		const uint8_t oldCycles = cpu.internal.cycles;
+		const uint16_t currentInstruction = cpu.programCounter;
+
 		Clock(&cpu);
 
-		if (oldCycles < cpu.internal.cycles)
+		const char colors[] = { '\xB0', '\xB2', '\xB1' };
+		if (oldCycles == 0)
 		{
-			printf("%-5c S: 0x%02X\tP: 0x%02X\tA: 0x%02X\tX: 0x%02X\tY: 0x%02X %c\n",
+			++instructionCount;
+			char buffer[13];
+			Disassemble(memory->raw + currentInstruction, buffer);
+			printf("% 5u% 2c\t%04X : %-12s",
+				cycle,
+				colors[instructionCount % 2],
+				currentInstruction,
+				buffer);
+		}
+		else if (cpu.internal.cycles == 0)
+		{
+			printf("% 3c\tS: 0x%02X\tP: 0x%02X\tA: 0x%02X\tX: 0x%02X\tY: 0x%02X\n",
 				colors[instructionCount % 2],
 				cpu.stackPointer,
 				cpu.status.flags,
 				cpu.accumulator,
 				cpu.xIndex,
-				cpu.yIndex,
-				colors[instructionCount % 2]);
+				cpu.yIndex);
 		}
 
 		++cycle;
@@ -92,4 +99,26 @@ int main(int argc, char** argv)
 	free(memory);
 
 	return cycle;
+}
+
+bool IsTrapped(struct CPU* cpu)
+{
+	static unsigned int count = 0;
+	uint8_t const* instruction = ((struct Memory const*)cpu->bus->memory)->raw + cpu->programCounter;
+	uint16_t const* address = (uint16_t*)(instruction + 1);
+	const uint8_t JMP = 0x4C;
+
+	if (cpu->internal.cycles == 0)
+	{
+		if (*instruction == JMP && *address == cpu->programCounter)
+		{
+			++count;
+		}
+		else
+		{
+			count = 0;
+		}
+	}
+
+	return count > 3;
 }

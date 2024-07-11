@@ -5,29 +5,31 @@
 #include "mos6502/instructionset.h"
 #include "mos6502/u16.h"
 
+#define FETCH 0x00
+#define EXECUTE 0xE0
+
 void Clock(struct CPU* cpu)
 {
-	switch (cpu->internal.cycles--)
+	switch (cpu->internal.cycles)
 	{
-	case 1:
-	{
+	case FETCH:
 		cpu->internal.address = cpu->programCounter;
-		cpu->internal.opcode = Read(cpu);
 		++cpu->programCounter;
+		cpu->internal.opcode = Read(cpu);
+		cpu->internal.cycles = EXECUTE;
+		cpu->internal.cycles += instructionSet[cpu->internal.opcode].cycles;
+		cpu->internal.cycles -= 2;
+		break;
+	default:
+		--cpu->internal.cycles;
+		break;
+	case EXECUTE:
+		cpu->internal.cycles = FETCH;
 
+		instructionSet[cpu->internal.opcode].Address(cpu);
+		instructionSet[cpu->internal.opcode].Operate(cpu);
 		break;
 	}
-	case 0:
-	{
-		const struct Instruction* instruction = &instructionSet[cpu->internal.opcode];
-		cpu->internal.cycles = instruction->cycles;
-
-		instruction->Address(cpu);
-		instruction->Operate(cpu);
-
-		break;
-	}
-	};
 }
 
 void Reset(struct CPU* cpu)
