@@ -101,6 +101,26 @@ void CMP(struct CPU* cpu)
 	cpu->status.carry = cpu->accumulator >= input;
 }
 
+void CPX(struct CPU* cpu)
+{
+	const uint8_t input = Read(cpu);
+	const uint16_t value = (uint16_t)cpu->xIndex - (uint16_t)input;
+
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+	cpu->status.carry = cpu->xIndex >= input;
+}
+
+void CPY(struct CPU* cpu)
+{
+	const uint8_t input = Read(cpu);
+	const uint16_t value = (uint16_t)cpu->yIndex - (uint16_t)input;
+
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+	cpu->status.carry = cpu->yIndex >= input;
+}
+
 void DEX(struct CPU* cpu)
 {
 	--cpu->xIndex;

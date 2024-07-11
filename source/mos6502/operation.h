@@ -12,6 +12,8 @@ void CLD(struct CPU*);
 void CLI(struct CPU*);
 void CLV(struct CPU*);
 void CMP(struct CPU*);
+void CPX(struct CPU*);
+void CPY(struct CPU*);
 void DEX(struct CPU*);
 void DEY(struct CPU*);
 void EOR(struct CPU*);
