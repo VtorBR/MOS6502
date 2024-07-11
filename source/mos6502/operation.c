@@ -83,7 +83,7 @@ void CMP(struct CPU* cpu)
 	const uint8_t input = Read(cpu);
 	const uint16_t value = (uint16_t)cpu->accumulator - (uint16_t)input;
 
-	cpu->status.negative = value & 0x80;
+	cpu->status.negative = (value & 0x80) == 0x80;
 	cpu->status.zero = value == 0x00;
 	cpu->status.carry = cpu->accumulator >= input;
 }
@@ -92,7 +92,7 @@ void DEX(struct CPU* cpu)
 {
 	--cpu->xIndex;
 
-	cpu->status.negative = cpu->xIndex & 0x80;
+	cpu->status.negative = (cpu->xIndex & 0x80) == 0x80;
 	cpu->status.zero = cpu->xIndex == 0x00;
 }
 
@@ -100,7 +100,7 @@ void DEY(struct CPU* cpu)
 {
 	--cpu->yIndex;
 
-	cpu->status.negative = cpu->yIndex & 0x80;
+	cpu->status.negative = (cpu->yIndex & 0x80) == 0x80;
 	cpu->status.zero = cpu->yIndex == 0x00;
 }
 
@@ -108,7 +108,7 @@ void EOR(struct CPU* cpu)
 {
 	cpu->accumulator ^= Read(cpu);
 
-	cpu->status.negative = cpu->accumulator & 0x80;
+	cpu->status.negative = (cpu->accumulator & 0x80) == 0x80;
 	cpu->status.zero = cpu->accumulator == 0x00;
 }
 
@@ -116,7 +116,7 @@ void INX(struct CPU* cpu)
 {
 	++cpu->xIndex;
 
-	cpu->status.negative = cpu->xIndex & 0x80;
+	cpu->status.negative = (cpu->xIndex & 0x80) == 0x80;
 	cpu->status.zero = cpu->xIndex == 0x00;
 }
 
@@ -124,7 +124,7 @@ void INY(struct CPU* cpu)
 {
 	++cpu->yIndex;
 
-	cpu->status.negative = cpu->yIndex & 0x80;
+	cpu->status.negative = (cpu->yIndex & 0x80) == 0x80;
 	cpu->status.zero = cpu->yIndex == 0x00;
 }
 
@@ -137,7 +137,7 @@ void LDA(struct CPU* cpu)
 {
 	cpu->accumulator = Read(cpu);
 
-	cpu->status.negative = cpu->accumulator & 0x80;
+	cpu->status.negative = (cpu->accumulator & 0x80) == 0x80;
 	cpu->status.zero = cpu->accumulator == 0x00;
 }
 
@@ -145,7 +145,7 @@ void LDX(struct CPU* cpu)
 {
 	cpu->xIndex = Read(cpu);
 
-	cpu->status.negative = cpu->xIndex & 0x80;
+	cpu->status.negative = (cpu->xIndex & 0x80) == 0x80;
 	cpu->status.zero = cpu->xIndex == 0x00;
 }
 
@@ -153,7 +153,7 @@ void LDY(struct CPU* cpu)
 {
 	cpu->yIndex = Read(cpu);
 
-	cpu->status.negative = cpu->yIndex & 0x80;
+	cpu->status.negative = (cpu->yIndex & 0x80) == 0x80;
 	cpu->status.zero = cpu->yIndex == 0x00;
 }
 
@@ -176,7 +176,7 @@ void PLA(struct CPU* cpu)
 {
 	cpu->accumulator = Pop(cpu);
 
-	cpu->status.negative = cpu->accumulator & 0x80;
+	cpu->status.negative = (cpu->accumulator & 0x80) == 0x80;
 	cpu->status.zero = cpu->accumulator == 0x00;
 }
 
@@ -232,7 +232,7 @@ void TAX(struct CPU* cpu)
 {
 	cpu->xIndex = cpu->accumulator;
 
-	cpu->status.negative = cpu->accumulator & 0x80;
+	cpu->status.negative = (cpu->accumulator & 0x80) == 0x80;
 	cpu->status.zero = cpu->accumulator == 0x00;
 }
 
@@ -240,7 +240,7 @@ void TAY(struct CPU* cpu)
 {
 	cpu->yIndex = cpu->accumulator;
 
-	cpu->status.negative = cpu->accumulator & 0x80;
+	cpu->status.negative = (cpu->accumulator & 0x80) == 0x80;
 	cpu->status.zero = cpu->accumulator == 0x00;
 }
 
@@ -248,7 +248,7 @@ void TSX(struct CPU* cpu)
 {
 	cpu->xIndex = cpu->stackPointer;
 
-	cpu->status.negative = cpu->xIndex & 0x80;
+	cpu->status.negative = (cpu->xIndex & 0x80) == 0x80;
 	cpu->status.zero = cpu->xIndex == 0x00;
 }
 
@@ -256,22 +256,19 @@ void TXA(struct CPU* cpu)
 {
 	cpu->accumulator = cpu->xIndex;
 
-	cpu->status.negative = cpu->accumulator & 0x80;
+	cpu->status.negative = (cpu->accumulator & 0x80) == 0x80;
 	cpu->status.zero = cpu->accumulator == 0x00;
 }
 
 void TXS(struct CPU* cpu)
 {
 	cpu->stackPointer = cpu->xIndex;
-
-	cpu->status.negative = cpu->xIndex & 0x80;
-	cpu->status.zero = cpu->xIndex == 0x00;
 }
 
 void TYA(struct CPU* cpu)
 {
 	cpu->accumulator = cpu->yIndex;
 
-	cpu->status.negative = cpu->accumulator & 0x80;
+	cpu->status.negative = (cpu->accumulator & 0x80) == 0x80;
 	cpu->status.zero = cpu->accumulator == 0x00;
 }
