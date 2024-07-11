@@ -7,32 +7,33 @@
 
 void Disassemble(uint8_t* program, char buffer[13])
 {
-	struct DisassembleFormat
+	struct Disassembler
 	{
 		void(*addressing)(struct CPU*);
 		const char* format;
-	} static const formats[] =
+		unsigned int bytes;
+	} static const disassemblers[] =
 	{
-		{ABS, "%s $%02X%02X"},
-		{ABX, "%s $%02X%02X,X"},
-		{ABY, "%s $%02X%02X,Y"},
-		{ACC, "%s A",},
-		{IDR, "%s ($%02X%02X)"},
-		{IDX, "%s ($%02X,X)"},
-		{IDY, "%s ($%02X),Y"},
-		{IMM, "%s #$%02X"},
-		{IMP, "%s"},
-		{REL, "%s $%02X"},
-		{ZPG, "%s $%02X"},
-		{ZPX, "%s $%02X,X"},
-		{ZPY, "%s $%02X,Y"},
+		{ABS, "%s $%02X%02X", 3},
+		{ABX, "%s $%02X%02X,X", 3},
+		{ABY, "%s $%02X%02X,Y", 3},
+		{ACC, "%s A", 1},
+		{IDR, "%s ($%02X%02X)", 3},
+		{IDX, "%s ($%02X,X)", 2},
+		{IDY, "%s ($%02X),Y", 2},
+		{IMM, "%s #$%02X", 2},
+		{IMP, "%s", 1},
+		{REL, "%s $%02X", 2},
+		{ZPG, "%s $%02X", 2},
+		{ZPX, "%s $%02X,X", 2},
+		{ZPY, "%s $%02X,Y", 2},
 	};
 
-	for (size_t index = 0; index < sizeof(formats) / sizeof(formats[0]); ++index)
+	for (size_t index = 0; index < sizeof(disassemblers) / sizeof(disassemblers[0]); ++index)
 	{
-		if (instructionSet[*program].Address == formats[index].addressing)
+		if (instructionSet[*program].Address == disassemblers[index].addressing)
 		{
-			sprintf(buffer, formats[index].format, instructionMnemonics[*program], program[1], program[2]);
+			sprintf(buffer, disassemblers[index].format, instructionMnemonics[*program], program[1], program[2]);
 			
 			return;
 		}
