@@ -37,12 +37,6 @@ void Clock(struct CPU* cpu)
 
 void Reset(struct CPU* cpu)
 {
-	cpu->accumulator = 0xAA;
-	cpu->xIndex = 0x00;
-	cpu->yIndex = 0x00;
-	cpu->stackPointer = 0xFD;
-	cpu->status.flags = 0b0010110;
-
 	cpu->internal.address = 0xFFFC;
 	*LO(&cpu->programCounter) = Read(cpu);
 	++cpu->internal.address;
