@@ -4,6 +4,15 @@
 #include "mos6502/cpuio.h"
 #include "mos6502/u16.h"
 
+const uint8_t carry = 0b00000001;
+const uint8_t zero = 0b00000010;
+const uint8_t irqDisable = 0b00000100;
+const uint8_t decimalMode = 0b00001000;
+const uint8_t brkCommand = 0b00010000;
+const uint8_t unused = 0b00100000;
+const uint8_t overflow = 0b01000000;
+const uint8_t negative = 0b10000000;
+
 void ADC(struct CPU* cpu)
 {
 	const uint8_t input = Read(cpu);
@@ -282,7 +291,7 @@ void PHA(struct CPU* cpu)
 
 void PHP(struct CPU* cpu)
 {
-	Push(cpu, cpu->status.flags | 0b00110000);
+	Push(cpu, cpu->status.flags | unused | brkCommand);
 }
 
 void PLA(struct CPU* cpu)
@@ -295,7 +304,7 @@ void PLA(struct CPU* cpu)
 
 void PLP(struct CPU* cpu)
 {
-	cpu->status.flags = Pop(cpu) & 0b11001111;
+	cpu->status.flags = Pop(cpu) & ~(unused | brkCommand);
 }
 
 void RTI(struct CPU* cpu)
