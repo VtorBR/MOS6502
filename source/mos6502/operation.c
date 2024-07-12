@@ -238,6 +238,14 @@ void JMP(struct CPU* cpu)
 	cpu->programCounter = cpu->internal.address;
 }
 
+void JSR(struct CPU* cpu)
+{
+	--cpu->programCounter;
+	Push(cpu, *HI(&cpu->programCounter));
+	Push(cpu, *LO(&cpu->programCounter));
+	cpu->programCounter = cpu->internal.address;
+}
+
 void LDA(struct CPU* cpu)
 {
 	cpu->accumulator = Read(cpu);
@@ -301,6 +309,7 @@ void RTS(struct CPU* cpu)
 {
 	*LO(&cpu->programCounter) = Pop(cpu);
 	*HI(&cpu->programCounter) = Pop(cpu);
+	++cpu->programCounter;
 }
 
 void SEC(struct CPU* cpu)

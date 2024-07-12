@@ -25,6 +25,7 @@ void EOR(struct CPU*);
 void INX(struct CPU*);
 void INY(struct CPU*);
 void JMP(struct CPU*);
+void JSR(struct CPU*);
 void LDA(struct CPU*);
 void LDX(struct CPU*);
 void LDY(struct CPU*);

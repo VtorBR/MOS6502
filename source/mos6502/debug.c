@@ -39,7 +39,7 @@ void Disassemble(uint8_t* program, char buffer[13])
 		}
 	}
 
-	sprintf(buffer, "%#02X ? %02X", *program, program[1]);
+	sprintf(buffer, "%#02X ? %02X %02X", *program, program[1], program[2]);
 }
 
 const char* instructionMnemonics[256] =
@@ -48,6 +48,7 @@ const char* instructionMnemonics[256] =
 	[0x08] = "PHP",
 	[0x10] = "BPL",
 	[0x18] = "CLC",
+	[0x20] = "JSR",
 	[0x28] = "PLP",
 	[0x30] = "BMI",
 	[0x38] = "SEC",
