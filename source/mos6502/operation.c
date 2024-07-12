@@ -11,7 +11,7 @@ void ADC(struct CPU* cpu)
 
 	cpu->status.negative = (value & 0x80) == 0x80;
 	cpu->status.overflow = (value ^ cpu->accumulator) & (value ^ input) & 0x0080;
-	cpu->status.zero = value == 0x00;
+	cpu->status.zero = (value & 0x00FF) == 0x0000;
 	cpu->status.carry = (value & 0x0100) == 0x0100;
 
 	cpu->accumulator = value & 0x00FF;
@@ -105,6 +105,8 @@ void BRK(struct CPU* cpu)
 {
 	Push(cpu, *HI(&cpu->programCounter));
 	Push(cpu, *LO(&cpu->programCounter));
+
+	cpu->status.brkCommand = 1;
 	Push(cpu, cpu->status.flags);
 
 	cpu->internal.address = 0xFFFE;
@@ -167,7 +169,7 @@ void CMP(struct CPU* cpu)
 	const uint16_t value = (uint16_t)cpu->accumulator - (uint16_t)input;
 
 	cpu->status.negative = (value & 0x80) == 0x80;
-	cpu->status.zero = value == 0x00;
+	cpu->status.zero = (value & 0x00FF) == 0x0000;
 	cpu->status.carry = cpu->accumulator >= input;
 }
 
@@ -177,7 +179,7 @@ void CPX(struct CPU* cpu)
 	const uint16_t value = (uint16_t)cpu->xIndex - (uint16_t)input;
 
 	cpu->status.negative = (value & 0x80) == 0x80;
-	cpu->status.zero = value == 0x00;
+	cpu->status.zero = (value & 0x00FF) == 0x0000;
 	cpu->status.carry = cpu->xIndex >= input;
 }
 
@@ -187,7 +189,7 @@ void CPY(struct CPU* cpu)
 	const uint16_t value = (uint16_t)cpu->yIndex - (uint16_t)input;
 
 	cpu->status.negative = (value & 0x80) == 0x80;
-	cpu->status.zero = value == 0x00;
+	cpu->status.zero = (value & 0x00FF) == 0x0000;
 	cpu->status.carry = cpu->yIndex >= input;
 }
 
@@ -272,7 +274,7 @@ void PHA(struct CPU* cpu)
 
 void PHP(struct CPU* cpu)
 {
-	Push(cpu, cpu->status.flags);
+	Push(cpu, cpu->status.flags | 0b00110000);
 }
 
 void PLA(struct CPU* cpu)
@@ -285,7 +287,7 @@ void PLA(struct CPU* cpu)
 
 void PLP(struct CPU* cpu)
 {
-	cpu->status.flags = Pop(cpu);
+	cpu->status.flags = Pop(cpu) & 0b11001111;
 }
 
 void RTI(struct CPU* cpu)
