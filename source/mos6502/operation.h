@@ -3,6 +3,7 @@
 struct CPU;
 
 void ADC(struct CPU*);
+void AND(struct CPU*);
 void BCC(struct CPU*);
 void BCS(struct CPU*);
 void BEQ(struct CPU*);
@@ -30,6 +31,7 @@ void LDA(struct CPU*);
 void LDX(struct CPU*);
 void LDY(struct CPU*);
 void NOP(struct CPU*);
+void ORA(struct CPU*);
 void PHA(struct CPU*);
 void PHP(struct CPU*);
 void PLA(struct CPU*);

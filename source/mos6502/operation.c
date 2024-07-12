@@ -26,6 +26,14 @@ void ADC(struct CPU* cpu)
 	cpu->accumulator = value & 0x00FF;
 }
 
+void AND(struct CPU* cpu)
+{
+	cpu->accumulator &= Read(cpu);
+
+	cpu->status.negative = (cpu->accumulator & 0x80) == 0x80;
+	cpu->status.zero = cpu->accumulator == 0x00;
+}
+
 void BCC(struct CPU* cpu)
 {
 	if (cpu->status.carry == 0)
@@ -283,6 +291,14 @@ void LDY(struct CPU* cpu)
 void NOP(struct CPU* cpu)
 {
 
+}
+
+void ORA(struct CPU* cpu)
+{
+	cpu->accumulator |= Read(cpu);
+
+	cpu->status.negative = (cpu->accumulator & 0x80) == 0x80;
+	cpu->status.zero = cpu->accumulator == 0x00;
 }
 
 void PHA(struct CPU* cpu)
