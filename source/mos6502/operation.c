@@ -112,11 +112,12 @@ void BPL(struct CPU* cpu)
 
 void BRK(struct CPU* cpu)
 {
+	++cpu->programCounter;
 	Push(cpu, *HI(&cpu->programCounter));
 	Push(cpu, *LO(&cpu->programCounter));
 
-	cpu->status.brkCommand = 1;
-	Push(cpu, cpu->status.flags);
+	Push(cpu, cpu->status.flags | brkCommand);
+	cpu->status.irqDisable = 1;
 
 	cpu->internal.address = 0xFFFE;
 	*LO(&cpu->programCounter) = Read(cpu);
@@ -304,12 +305,12 @@ void PLA(struct CPU* cpu)
 
 void PLP(struct CPU* cpu)
 {
-	cpu->status.flags = Pop(cpu) & ~(unused | brkCommand);
+	cpu->status.flags = Pop(cpu) | unused & ~brkCommand;
 }
 
 void RTI(struct CPU* cpu)
 {
-	cpu->status.flags = Pop(cpu);
+	cpu->status.flags = Pop(cpu) | unused & ~brkCommand;
 	*LO(&cpu->programCounter) = Pop(cpu);
 	*HI(&cpu->programCounter) = Pop(cpu);
 }
