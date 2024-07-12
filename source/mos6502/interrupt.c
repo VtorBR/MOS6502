@@ -5,6 +5,8 @@
 #include "mos6502/instructionset.h"
 #include "mos6502/u16.h"
 
+#include <assert.h>
+
 #define FETCH 0x00
 #define EXECUTE 0xE0
 
@@ -21,6 +23,7 @@ void Clock(struct CPU* cpu)
 		cpu->internal.cycles -= 2;
 		break;
 	default:
+		assert(cpu->internal.cycles != EXECUTE - 2); // Illegal opcode
 		--cpu->internal.cycles;
 		break;
 	case EXECUTE:
