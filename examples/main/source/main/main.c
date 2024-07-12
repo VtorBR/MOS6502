@@ -145,5 +145,5 @@ bool IsTrapped(struct CPU* cpu)
 		}
 	}
 
-	return count > 3;
+	return count > 5;
 }
