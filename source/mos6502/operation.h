@@ -7,6 +7,7 @@ void AND(struct CPU*);
 void BCC(struct CPU*);
 void BCS(struct CPU*);
 void BEQ(struct CPU*);
+void BIT(struct CPU*);
 void BMI(struct CPU*);
 void BNE(struct CPU*);
 void BPL(struct CPU*);

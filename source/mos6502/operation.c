@@ -76,6 +76,15 @@ void BEQ(struct CPU* cpu)
 	}
 }
 
+void BIT(struct CPU* cpu)
+{
+	const uint8_t input = Read(cpu);
+
+	cpu->status.negative = (input & 0b10000000) == 0b10000000;
+	cpu->status.overflow = (input & 0b01000000) == 0b01000000;
+	cpu->status.zero = (cpu->accumulator & input) == 0x00;
+}
+
 void BMI(struct CPU* cpu)
 {
 	if (cpu->status.negative == 1)
