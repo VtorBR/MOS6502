@@ -18,7 +18,7 @@ void ADC(struct CPU* cpu)
 	const uint8_t input = Read(cpu);
 	const uint16_t value = (uint16_t)cpu->accumulator + (uint16_t)input + cpu->status.carry;
 
-	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.negative = (value & 0x0080) == 0x0080;
 	cpu->status.overflow = (value ^ cpu->accumulator) & (value ^ input) & 0x0080;
 	cpu->status.zero = (value & 0x00FF) == 0x0000;
 	cpu->status.carry = (value & 0x0100) == 0x0100;
@@ -195,7 +195,7 @@ void CMP(struct CPU* cpu)
 	const uint8_t input = Read(cpu);
 	const uint16_t value = (uint16_t)cpu->accumulator - (uint16_t)input;
 
-	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.negative = (value & 0x0080) == 0x0080;
 	cpu->status.zero = (value & 0x00FF) == 0x0000;
 	cpu->status.carry = cpu->accumulator >= input;
 }
@@ -205,7 +205,7 @@ void CPX(struct CPU* cpu)
 	const uint8_t input = Read(cpu);
 	const uint16_t value = (uint16_t)cpu->xIndex - (uint16_t)input;
 
-	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.negative = (value & 0x0080) == 0x0080;
 	cpu->status.zero = (value & 0x00FF) == 0x0000;
 	cpu->status.carry = cpu->xIndex >= input;
 }
@@ -215,7 +215,7 @@ void CPY(struct CPU* cpu)
 	const uint8_t input = Read(cpu);
 	const uint16_t value = (uint16_t)cpu->yIndex - (uint16_t)input;
 
-	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.negative = (value & 0x0080) == 0x0080;
 	cpu->status.zero = (value & 0x00FF) == 0x0000;
 	cpu->status.carry = cpu->yIndex >= input;
 }
