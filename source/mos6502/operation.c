@@ -34,6 +34,30 @@ void AND(struct CPU* cpu)
 	cpu->status.zero = cpu->accumulator == 0x00;
 }
 
+void ASL(struct CPU* cpu)
+{
+	const uint8_t input = Read(cpu);
+	const uint8_t value = input << 1;
+
+	cpu->status.carry = (input & 0x80) == 0x80;
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+
+	Write(cpu, value);
+}
+
+void ASL_A(struct CPU* cpu)
+{
+	const uint8_t input = cpu->accumulator;
+	const uint8_t value = input << 1;
+
+	cpu->status.carry = (input & 0x80) == 0x80;
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+
+	cpu->accumulator = value;
+}
+
 void BCC(struct CPU* cpu)
 {
 	if (cpu->status.carry == 0)
@@ -297,6 +321,30 @@ void LDY(struct CPU* cpu)
 	cpu->status.zero = cpu->yIndex == 0x00;
 }
 
+void LSR(struct CPU* cpu)
+{
+	const uint8_t input = Read(cpu);
+	const uint8_t value = input >> 1;
+
+	cpu->status.carry = (input & 0x01) == 0x01;
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+
+	Write(cpu, value);
+}
+
+void LSR_A(struct CPU* cpu)
+{
+	const uint8_t input = cpu->accumulator;
+	const uint8_t value = input >> 1;
+
+	cpu->status.carry = (input & 0x01) == 0x01;
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+
+	cpu->accumulator = value;
+}
+
 void NOP(struct CPU* cpu)
 {
 
@@ -331,6 +379,54 @@ void PLA(struct CPU* cpu)
 void PLP(struct CPU* cpu)
 {
 	cpu->status.flags = Pop(cpu) | unused & ~brkCommand;
+}
+
+void ROL(struct CPU* cpu)
+{
+	const uint8_t input = Read(cpu);
+	const uint8_t value = (input << 1) | cpu->status.carry;
+
+	cpu->status.carry = (input & 0x80) == 0x80;
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+
+	Write(cpu, value);
+}
+
+void ROL_A(struct CPU* cpu)
+{
+	const uint8_t input = cpu->accumulator;
+	const uint8_t value = (input << 1) | cpu->status.carry;
+
+	cpu->status.carry = (input & 0x80) == 0x80;
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+
+	cpu->accumulator = value;
+}
+
+void ROR(struct CPU* cpu)
+{
+	const uint8_t input = Read(cpu);
+	const uint8_t value = (cpu->status.carry << 7) | (input >> 1);
+
+	cpu->status.carry = (input & 0x01) == 0x01;
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+
+	Write(cpu, value);
+}
+
+void ROR_A(struct CPU* cpu)
+{
+	const uint8_t input = cpu->accumulator;
+	const uint8_t value = (cpu->status.carry << 7) | (input >> 1);
+
+	cpu->status.carry = (input & 0x01) == 0x01;
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+
+	cpu->accumulator = value;
 }
 
 void RTI(struct CPU* cpu)
