@@ -244,6 +244,16 @@ void CPY(struct CPU* cpu)
 	cpu->status.carry = cpu->yIndex >= input;
 }
 
+void DEC(struct CPU* cpu)
+{
+	const uint8_t value = Read(cpu) - 1;
+
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+
+	Write(cpu, value);
+}
+
 void DEX(struct CPU* cpu)
 {
 	--cpu->xIndex;
@@ -266,6 +276,16 @@ void EOR(struct CPU* cpu)
 
 	cpu->status.negative = (cpu->accumulator & 0x80) == 0x80;
 	cpu->status.zero = cpu->accumulator == 0x00;
+}
+
+void INC(struct CPU* cpu)
+{
+	const uint8_t value = Read(cpu) + 1;
+
+	cpu->status.negative = (value & 0x80) == 0x80;
+	cpu->status.zero = value == 0x00;
+
+	Write(cpu, value);
 }
 
 void INX(struct CPU* cpu)
