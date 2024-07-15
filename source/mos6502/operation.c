@@ -16,12 +16,35 @@ const uint8_t negative = 0b10000000;
 void ADC(struct CPU* cpu)
 {
 	const uint8_t input = Read(cpu);
-	const uint16_t value = (uint16_t)cpu->accumulator + (uint16_t)input + cpu->status.carry;
+	uint16_t value;
+
+	if (cpu->status.decimalMode)
+	{
+		value = (cpu->accumulator & 0x0f) + (input & 0x0f) + cpu->status.carry;
+		if ((value & 0x0010) == 0x0010 ||
+			(value & 0x000A) == 0x000A ||
+			(value & 0x000C) == 0x000C)
+		{
+			value += 0x0006;
+		}
+
+		value += (cpu->accumulator & 0xF0) + (input & 0xF0);
+		if ((value & 0x0100) == 0x0100 ||
+			(value & 0x00A0) == 0x00A0 ||
+			(value & 0x00C0) == 0x00C0)
+		{
+			value += 0x0060;
+		}
+	}
+	else
+	{
+		value = cpu->accumulator + input + cpu->status.carry;
+	}
 
 	cpu->status.negative = (value & 0x0080) == 0x0080;
-	cpu->status.overflow = (value ^ cpu->accumulator) & (value ^ input) & 0x0080;
+	cpu->status.overflow = ((value ^ cpu->accumulator) & (value ^ input) & 0x0080) == 0x0080;
 	cpu->status.zero = (value & 0x00FF) == 0x0000;
-	cpu->status.carry = (value & 0x0100) == 0x0100;
+	cpu->status.carry = (value & 0xFF00) != 0x0000;
 
 	cpu->accumulator = value & 0x00FF;
 }
@@ -461,6 +484,42 @@ void RTS(struct CPU* cpu)
 	*LO(&cpu->programCounter) = Pop(cpu);
 	*HI(&cpu->programCounter) = Pop(cpu);
 	++cpu->programCounter;
+}
+
+void SBC(struct CPU* cpu)
+{
+	const uint8_t input = Read(cpu) ^ 0xFF;
+	uint16_t value;
+
+	if (cpu->status.decimalMode)
+	{
+		value = (cpu->accumulator & 0x0F) + (input & 0x0F) + cpu->status.carry;
+		if ((value & 0x0010) == 0x0000 ||
+			(value & 0x000A) == 0x000A ||
+			(value & 0x000C) == 0x000C)
+		{
+			value -= 0x0006;
+		}
+
+		value += (cpu->accumulator & 0xF0) + (input & 0xF0);
+		if ((value & 0x0100) == 0x0000 ||
+			(value & 0x00A0) == 0x00A0 ||
+			(value & 0x00C0) == 0x00C0)
+		{
+			value -= 0x0060;
+		}
+	}
+	else
+	{
+		value = (uint16_t)cpu->accumulator + (uint16_t)input + cpu->status.carry;
+	}
+
+	cpu->status.negative = (value & 0x0080) == 0x0080;
+	cpu->status.overflow = ((value ^ cpu->accumulator) & (value ^ input) & 0x0080) == 0x0080;
+	cpu->status.zero = (value & 0x00FF) == 0x0000;
+	cpu->status.carry = (value & 0xFF00) != 0x0000;
+
+	cpu->accumulator = value & 0x00FF;
 }
 
 void SEC(struct CPU* cpu)

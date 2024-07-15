@@ -49,6 +49,7 @@ void ROR_A(struct CPU*);
 void ROR(struct CPU*);
 void RTI(struct CPU*);
 void RTS(struct CPU*);
+void SBC(struct CPU*);
 void SEC(struct CPU*);
 void SED(struct CPU*);
 void SEI(struct CPU*);
