@@ -7,8 +7,8 @@ typedef void(*BusWriteFunction)(void* memory, uint16_t address, uint8_t data);
 
 struct Bus
 {
-	BusReadFunction const Read;
-	BusWriteFunction const Write;
+	BusReadFunction Read;
+	BusWriteFunction Write;
 
-	void* const memory;
+	void* memory;
 };
