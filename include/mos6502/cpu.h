@@ -23,7 +23,7 @@ struct CPU
 
 	union
 	{
-		struct Status
+		struct
 		{
 			uint8_t carry : 1;
 			uint8_t zero : 1;

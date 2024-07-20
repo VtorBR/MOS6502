@@ -12,7 +12,7 @@ void WriteMemory(void* memory, uint16_t address, uint8_t data);
 
 struct AppleI
 {
-	union RAM
+	union
 	{
 		struct
 		{
