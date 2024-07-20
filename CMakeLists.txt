@@ -10,8 +10,7 @@ target_include_directories(MOS6502
 	PRIVATE source/
 )
 
-option(MOS6502_EXAMPLES "Inlucdes examples of MOS6502 usage" ON)
-
+option(MOS6502_EXAMPLES "Includes examples of MOS6502 usage" ON)
 if (MOS6502_EXAMPLES)
-	add_subdirectory(examples)
+	add_subdirectory(example)
 endif()
