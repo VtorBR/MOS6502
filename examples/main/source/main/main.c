@@ -62,11 +62,15 @@ int main(int argc, char** argv)
 
 	unsigned int cycle = 0;
 	unsigned int instructionCount = 0;
+
 	while (!IsTrapped(&cpu))
 	{
 		const struct CPU old = cpu;
 
 		Clock(&cpu);
+		++cycle;
+
+		continue;
 
 		const char colors[] = { '\xB0', '\xB2', '\xB1' };
 		if (old.internal.cycles == 0)
@@ -75,7 +79,7 @@ int main(int argc, char** argv)
 			char buffer[13];
 			Disassemble(memory->raw + old.programCounter, buffer);
 			printf("% 5u% 2c\t%04X : %-12s",
-				cycle,
+				cycle - 1,
 				colors[instructionCount % 2],
 				old.programCounter,
 				buffer);
@@ -88,7 +92,7 @@ int main(int argc, char** argv)
 			const char* formats[] =
 			{
 				[false] = "\t%c: 0x%02X",
-				[true] = "\t%c:",
+				[true] = "\t%c:     ",
 			};
 
 			printf(formats[old.stackPointer == cpu.stackPointer],
@@ -111,11 +115,39 @@ int main(int argc, char** argv)
 				'Y',
 				cpu.yIndex);
 
+			if (old.status.flags != cpu.status.flags)
+			{
+				printf("\t%-2c%c%c%c%c%c%c%c%c",
+					colors[instructionCount % 2],
+					cpu.status.negative ? 'N' : 'n',
+					cpu.status.overflow ? 'V' : 'v',
+					cpu.status.unused ? 'U' : 'u',
+					cpu.status.brkCommand ? 'B' : 'b',
+					cpu.status.decimalMode ? 'D' : 'd',
+					cpu.status.irqDisable ? 'I' : 'i',
+					cpu.status.zero ? 'Z' : 'z',
+					cpu.status.carry ? 'C' : 'c');
+			}
+			else
+			{
+				printf("\t%-2c        ",
+					colors[instructionCount % 2]);
+			}
+
+			if (old.stackPointer != cpu.stackPointer)
+			{
+				printf("\tstack:");
+				for (uint8_t index = cpu.stackPointer; index < 0xFF; ++index)
+				{
+					printf(" %02X", memory->mapped.stack[index + 1]);
+				}
+			}
+
 			putchar('\n');
 		}
-
-		++cycle;
 	}
+
+	printf("Trapped at 0x%04X\n", cpu.programCounter);
 
 	free(memory);
 
