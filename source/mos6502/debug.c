@@ -5,13 +5,13 @@
 
 #include <stdio.h>
 
-void Disassemble(uint8_t* program, char buffer[13])
+uint8_t Disassemble(const uint8_t* program, char buffer[13])
 {
 	struct Disassembler
 	{
 		void(*addressing)(struct CPU*);
 		const char* format;
-		unsigned int bytes;
+		uint8_t bytes;
 	} static const disassemblers[] =
 	{
 		{ABS, "%s $%02X%02X", 3},
@@ -33,13 +33,15 @@ void Disassemble(uint8_t* program, char buffer[13])
 	{
 		if (instructionSet[*program].Address == disassemblers[index].addressing)
 		{
-			sprintf(buffer, disassemblers[index].format, instructionMnemonics[*program], program[1], program[2]);
+			sprintf(buffer, disassemblers[index].format, instructionMnemonics[program[0]], program[1], program[2]);
 			
-			return;
+			return disassemblers[index].bytes;
 		}
 	}
 
-	sprintf(buffer, "%#02X ? %02X %02X", *program, program[1], program[2]);
+	sprintf(buffer, "%#02X ? %02X %02X", program[0], program[1], program[2]);
+
+	return 0;
 }
 
 const char* instructionMnemonics[256] =
