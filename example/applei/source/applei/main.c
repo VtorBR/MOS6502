@@ -15,22 +15,20 @@ int main(int argc, char* argv[])
 		.bus = CreateAppleI(),
 	};
 
-	FILE* log = freopen("6502.log", "w", stderr);
+	FILE* log = fopen("6502.log", "w");
 	assert(log);
 
 	Reset(&cpu);
 
 	while (1)
 	{
-		const struct CPU old = cpu;
-
 		Clock(&cpu);
 		
-		if (old.internal.cycles == 0)
+		if (cpu.internal.cycles == 0)
 		{
-			char buffer[13];
-			Disassemble(&wozmon[old.programCounter % sizeof(wozmon)], buffer);
-			fprintf(log, "%04X\t%-12s\n", old.programCounter, buffer);
+			char assembly[13];
+			Disassemble(&wozmon[cpu.programCounter % sizeof(wozmon)], assembly);
+			fprintf(log, "%04X\t%-12s\n", cpu.programCounter, assembly);
 		}
 	}
 
