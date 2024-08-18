@@ -8,29 +8,31 @@
 #include <assert.h>
 
 #define FETCH 0x00
+#define DECODE 0xDE
 #define EXECUTE 0xE0
 
 void Clock(struct CPU* cpu)
 {
+	static_assert(EXECUTE - DECODE == 2, "2 is the minimum instruction cycle count.");
+
 	switch (cpu->internal.cycles)
 	{
 	case FETCH:
 		cpu->internal.address = cpu->programCounter;
 		++cpu->programCounter;
 		cpu->internal.opcode = Read(cpu);
-		cpu->internal.cycles = EXECUTE;
+		cpu->internal.cycles = DECODE;
 		cpu->internal.cycles += instructionSet[cpu->internal.opcode].cycles;
-		cpu->internal.cycles -= 2;
 		break;
-	default:
-		assert(cpu->internal.cycles != EXECUTE - 2); // Illegal opcode
-		--cpu->internal.cycles;
-		break;
+	case DECODE: // Illegal opcode
+		assert(instructionSet[cpu->internal.opcode].cycles);
 	case EXECUTE:
 		cpu->internal.cycles = FETCH;
-
 		instructionSet[cpu->internal.opcode].Address(cpu);
 		instructionSet[cpu->internal.opcode].Operate(cpu);
+		break;
+	default:
+		--cpu->internal.cycles;
 		break;
 	}
 }
