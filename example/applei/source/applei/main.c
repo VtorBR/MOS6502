@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 
 	Reset(&cpu);
 
-	while (cpu.internal.cycles != 0xDE) // Illegal opcode
+	while (cpu.internal.cycles != 0xDE) // Legal opcode
 	{
 		Clock(&cpu);
 		
