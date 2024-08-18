@@ -1,5 +1,4 @@
 #include "applei/applei.h"
-#include "applei/wozmon.h"
 
 #include <mos6502/cpu.h>
 #include <mos6502/debug.h>
@@ -20,14 +19,15 @@ int main(int argc, char* argv[])
 
 	Reset(&cpu);
 
-	while (1)
+	while (cpu.internal.cycles != 0xDE) // Illegal opcode
 	{
 		Clock(&cpu);
 		
-		if (cpu.internal.cycles == 0)
+		if (cpu.internal.cycles == 0) // Instruction fetch
 		{
+			const uint8_t* program = GetAddress(cpu.bus, cpu.programCounter);
 			char assembly[13];
-			Disassemble(&wozmon[cpu.programCounter % sizeof(wozmon)], assembly);
+			Disassemble(program, assembly);
 			fprintf(log, "%04X\t%-12s\n", cpu.programCounter, assembly);
 		}
 	}

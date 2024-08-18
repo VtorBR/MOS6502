@@ -49,6 +49,19 @@ void DestroyAppleI(struct Bus* bus)
 	free(bus);
 }
 
+const uint8_t* GetAddress(struct Bus* bus, uint16_t address)
+{
+	const struct AppleI* apple = bus->memory;
+	if (address >> 15)
+	{
+		return &apple->rom[address % 0x100];
+	}
+	else
+	{
+		return &apple->ram[address % 0x8000];
+	}
+}
+
 #define KBD 0xD010
 #define KBDCR 0xD011
 #define DSP 0xD012
