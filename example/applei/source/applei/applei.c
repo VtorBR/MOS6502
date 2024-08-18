@@ -4,6 +4,7 @@
 #include <mos6502/bus.h>
 
 #include <assert.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -65,7 +66,7 @@ uint8_t ReadMemory(void* memory, uint16_t address)
 			character = '\r';
 		}
 
-		return character | 0x80;
+		return toupper(character) | 0x80;
 	}
 	case KBDCR:
 		return 0x80;

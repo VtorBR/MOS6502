@@ -10,13 +10,13 @@
 
 int main(int argc, char* argv[])
 {
+	FILE* log = fopen("6502.log", "w");
+	assert(log);
+
 	struct CPU cpu =
 	{
 		.bus = CreateAppleI(),
 	};
-
-	FILE* log = fopen("6502.log", "w");
-	assert(log);
 
 	Reset(&cpu);
 
@@ -32,8 +32,9 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	fclose(log);
 	DestroyAppleI(cpu.bus);
+
+	fclose(log);
 
 	return 0;
 }
